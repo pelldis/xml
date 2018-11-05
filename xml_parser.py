@@ -37,7 +37,7 @@ def getTitles(xml):
 			print(node.data) '''
 
 #count = 0
-def editXML(filename):
+def editXML(directory, filename):
 	tree = ET.parse(filename)
 	root = tree.getroot()
 	print ("tag=%s, attrib=%s" % (root.tag, root.attrib))
@@ -47,19 +47,31 @@ def editXML(filename):
 	print 'Iterating using a tree iterator'
 	print "-" * 40
 	iter_ = tree.getiterator()
+	n=0
 	for elem in iter_:
 		if "Row" in elem.tag:
-				continue
+			if n > 1:
+				print n
+			n += 1
+			z=0
 		elif "Data" in elem.tag:
+			if z == 3:
+				elem.text = "50000"
+			z += 1
+			print elem.text,
+	iter_ = tree.getiterator()
+	for elem in iter_:
+		if "Data" in elem.tag:
 			print elem.text
-			#print "\n"
+	#print tree
+	#print "\n"
 	#appointments = root.getchildren()
 	'''for appointment in appointments:
 		appt_children = appointment.getchildren()
 		for appt_child in appt_children:
 			print("%s=%s" % (appt_child.tag, appt_child.text))'''
 	# задаем начальный столбец - #2
-	z=2
+	#z=2
 	# делаем количество циклов = количество значений со второго столбца до конца строки
 	# деленое на 2, т.к. uplink, downlink - это одна итерация
 	'''for n in range((len(root[3][0][7][2::]))/2):
@@ -76,7 +88,7 @@ def editXML(filename):
 	#with open("vygruzka1.xml", "w") as f:
 	#	print row
 # Указываем директорию, из которой будем открывать файлы для парсинга	
-directory = "/home/antosh/Documents"
+#directory = "/home/antosh/Documents"
 files = os.listdir(directory)
 # Парсим все файлы заканчивающиеся на .xml с помощью ранее созданной функции
 '''for i in sorted(files):
