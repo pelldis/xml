@@ -42,8 +42,10 @@ def editXML(directory, filename):
     
 	tree = ET.parse(filename)
 	root = tree.getroot()
+	
 	for xml_file in sorted(directory):
-		if xml_file.endswith(".xml") and xml_file != "vygruzka.xml":
+		count_files = 0
+		if xml_file.endswith("one1.xml") and xml_file != "vygruzka.xml":
 			print "parsing file - " + xml_file
 			tree1 = ET.parse(xml_file)
 			root_tree1 = tree1.getroot()
@@ -58,19 +60,27 @@ def editXML(directory, filename):
 			for elem in iter_:
 				# проходим по файлам откуда забирать значения
 				for elem1 in iter1_:
-					if "Row" in elem1.tag:
-						if "Row" in elem.tag:
+					if "Row" in elem.tag:
+						if "Row" in elem1.tag:
 							if n1 > 0:
 								print n1
+								
 							n1 += 1
 						z=0
+						n += 1
 					elif "Data" in elem1.tag:
 						if "Data" in elem.tag:
 						# на 7 строке начинаем вносить изменения
 						#if z == 3 and n >= 7: 
 						#	print elem.text #elem.text = "50000"
 							z += 1
-							print elem.text,
+							if z == 3 and n > 6:
+								if z == 3 and+
+								
+								 n1 > 6:
+									print elem.text, elem1.text, z
+							n += 1
+							n1 += 1
 	iter_ = tree.getiterator()
 
 	#print ("tag=%s, attrib=%s" % (root.tag, root.attrib))
