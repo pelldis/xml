@@ -5,10 +5,11 @@ import sys
 import os
 
 #функция парсинга
+"""
 def getTitles(xml):
-	"""
-	Выводим все заголовки из xml.
-	"""
+	
+	#Выводим все заголовки из xml.
+	
 	doc = minidom.parse(xml)
 	node = doc.documentElement
 	# парсим данные по тегу, данные впоследсвие будем доставать из books 
@@ -35,34 +36,50 @@ def getTitles(xml):
 		for node in nodes:
 			#if node.nodeType == node.TEXT_NODE:
 			print(node.data) '''
-
+"""
 #count = 0
 def editXML(directory, filename):
+    
 	tree = ET.parse(filename)
 	root = tree.getroot()
-	print ("tag=%s, attrib=%s" % (root.tag, root.attrib))
-	for child in root:
-		print child.tag, child.attrib
-	print "-" * 40
-	print 'Iterating using a tree iterator'
-	print "-" * 40
+	for xml_file in sorted(directory):
+		if xml_file.endswith(".xml") and xml_file != "vygruzka.xml":
+			print "parsing file - " + xml_file
+			tree1 = ET.parse(xml_file)
+			root_tree1 = tree1.getroot()
+			iter1_ = tree1.getiterator()
+			print "-" * 40
+			print 'Iterating using a tree iterator'
+			print "-" * 40
+			iter_ = tree.getiterator()
+			n = 0 # счетчик строк в основном файле
+			n1 = 0 # счетчик строк в дочернем файле
+			# проходим по основному файлу
+			for elem in iter_:
+				# проходим по файлам откуда забирать значения
+				for elem1 in iter1_:
+					if "Row" in elem1.tag:
+						if "Row" in elem.tag:
+							if n1 > 0:
+								print n1
+							n1 += 1
+						z=0
+					elif "Data" in elem1.tag:
+						if "Data" in elem.tag:
+						# на 7 строке начинаем вносить изменения
+						#if z == 3 and n >= 7: 
+						#	print elem.text #elem.text = "50000"
+							z += 1
+							print elem.text,
 	iter_ = tree.getiterator()
-	n=0
-	for elem in iter_:
-		if "Row" in elem.tag:
-			if n > 1:
-				print n
-			n += 1
-			z=0
-		elif "Data" in elem.tag:
-			if z == 3:
-				elem.text = "50000"
-			z += 1
-			print elem.text,
-	iter_ = tree.getiterator()
-	for elem in iter_:
-		if "Data" in elem.tag:
-			print elem.text
+
+	#print ("tag=%s, attrib=%s" % (root.tag, root.attrib))
+	#for child in root:
+	#	print child.tag, child.attrib
+	
+	#for elem in iter_:
+	#	if "Data" in elem.tag:
+	#		print elem.text
 	#print tree
 	#print "\n"
 	#appointments = root.getchildren()
@@ -88,7 +105,7 @@ def editXML(directory, filename):
 	#with open("vygruzka1.xml", "w") as f:
 	#	print row
 # Указываем директорию, из которой будем открывать файлы для парсинга	
-#directory = "/home/antosh/Documents"
+directory = "/home/anton/Documents"
 files = os.listdir(directory)
 # Парсим все файлы заканчивающиеся на .xml с помощью ранее созданной функции
 '''for i in sorted(files):
@@ -96,9 +113,5 @@ files = os.listdir(directory)
 		#print i
 		getTitles(i)'''
 		
-editXML("vygruzka.xml")
+editXML(files, "vygruzka.xml")
 
-
-		
-		
-	
