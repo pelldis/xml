@@ -31,37 +31,43 @@ def get_data_xml(filename):
 
 def editXML(directory, filename):
 	files = os.listdir(directory)
-	for file_ in sorted(files):
+	num = 2 # счетчик для перехода через 2 столбца каждый новый файл
+	for file_ in sorted(files): # парсим каждый файл в сортированном виде
+		# если файл - xml и не основной файл
 		if file_.endswith(".xml") and "vyg" not in file_:
 			print
-			print file_
+			print "* * * Парсим файл", file_, " * * *\n" 
 			a = list(get_data_xml(file_))
 			print a
-	tree = ET.parse(filename)
-	root = tree.getroot()
-	iter_ = tree.getiterator()
-	
-	n = 0 # счетчик строк
-	for elem in iter_: 
-		#print n, elem.tag
-		# проходим по файлам откуда забирать значения
-		if "Row" in elem.tag:
-			z = 0 # счетчик столбцов
-			n += 1
+			tree = ET.parse(filename)
+			root = tree.getroot()
+			iter_ = tree.getiterator()
+			
+			n = 0 # счетчик строк
+			c = 0 # счетчик для элемента в листе дочернего файла
+			for elem in iter_: 
+				#print n, elem.tag
+				# проходим по файлам откуда забирать значения
+				if "Row" in elem.tag:
+					z = 0 # счетчик столбцов
+					n += 1
 
-		elif "Data" in elem.tag and n > 6:
-			if z > 0 and z < 3: # Берем данные из 2 и 3 столбца
-				print elem.text,
-				z += 1
-			else:
-				z += 1
-directory = "/home/anton/Documents"
+				elif "Data" in elem.tag and n > 6:
+					if z in range(num, num+2): # Берем данные из 2 и 3 столбца
+						print elem.text, int(a[c])
+						elem.text = str(a[c])
+						c += 1
+						z += 1
+					else:
+						z += 1
+			num += 2
+			#vyvod = tree.getroot()
+			#iter_ = tree.getiterator()
+			for elem in iter_:
+				if "Data" in elem.tag:
+					print elem.text
+			tree.write("vygruzka.xml")
+			
+			
+directory = "/home/antosh/Documents"
 editXML(directory, "vygruzka.xml")
-# Указываем директорию, из которой будем открывать файлы для парсинга	
-
-#files = os.listdir(directory)
-# Парсим все файлы заканчивающиеся на .xml с помощью ранее созданной функции
-		
-#editXML(files, "vygruzka.xml")
-
-
