@@ -1,0 +1,72 @@
+#-*- coding: utf-8 -*-
+import xml.dom.minidom as minidom
+import xml.etree.ElementTree as ET
+import sys
+import os
+
+# функция для сбора значений из двух рядом стоящих ячеек в список []
+def get_data_xml(filename):
+	tree = ET.parse(filename)
+	root = tree.getroot()
+	iter_ = tree.getiterator()
+	data = []
+	n = 0 # счетчик строк
+	for elem in iter_: 
+		if "Row" in elem.tag:
+			z = 0 # счетчик столбцов
+			n += 1
+			#print elem.text
+		elif "Data" in elem.tag:
+			#if z > 0 and z < 3: # Берем данные из 3 и 4 столбца
+				# Добавляем значение в список
+			data.append(elem.text) 
+			#z += 1						
+		else:
+			continue #z += 1
+	print list(data)   #, data.pop(0)
+	#for name in root.iter('DisplayName'):
+	#	print name.text
+	#print data   #, data.pop(0)
+	return data
+#get_data_xml("tex.xml")
+def editXML(filename):
+	#files = os.listdir(directory)
+	num = 2 # счетчик для перехода через 2 столбца каждый новый файл
+	# парсим каждый файл в сортированном виде
+	get_data_xml("tex.xml") 
+	dns = list(get_data_xml("tex.xml"))
+	#print a
+	tree = ET.parse(filename)
+	root = tree.getroot()
+	iter_ = tree.getiterator()
+	tree = ET.parse(filename)
+	root = tree.getroot()
+	iter_ = tree.getiterator()
+	data = []
+	n = 0 # счетчик строк
+	z = 0 #счетчик вхождений DisplayName
+	for elem in iter_: 
+		# проходим по файлам откуда забирать значения
+		#print elem.tag, elem.attrib
+		if elem.tag == "DisplayName":
+			z += 1
+			if z > 4:
+				print elem.text, dns[n],
+				elem.text = dns[n]
+		elif "L0" in elem.tag and z > 4:
+			elem.text = "ssh " + dns[n+1]
+			n += 2
+			print elem.text					
+		else:
+			continue
+	tree.write("vygruzka.xml", encoding="UTF-8")
+	# выводим в терминал то, что записали в файл
+	#for elem in iter_:
+	#	if "Row" in elem.tag:
+	#		print
+	#	elif "Data" in elem.tag:
+	#		print "{:<14}".format(elem.text),
+			
+#directory = "/home/anton/Documents/mputty"
+# вызов функции
+editXML("mputty.xml")
